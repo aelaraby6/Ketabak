@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Profile | Ketabak</title>
-    <meta name="description" content="Manage your Ketabak account, view your wishlist, and checkout your orders." />
+    <meta name="description" content="Manage your Ketabak account, edit profile details, check orders, and view your saved wishlist." />
     
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/profile.css" />
@@ -18,6 +18,8 @@
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
     />
+    <!-- Initialize Theme quickly to prevent flash of light theme -->
+    <script src="../js/theme.js"></script>
   </head>
   <body>
 
@@ -33,12 +35,12 @@
                 alt="User Profile Picture"
                 id="userAvatarImg"
               />
-              <button class="edit-avatar-btn" aria-label="Change profile picture">
+              <button class="edit-avatar-btn" aria-label="Change profile picture" onclick="window.showNotification('Avatar uploads require server configuration.', 'info')">
                 <i class="fas fa-camera" aria-hidden="true"></i>
               </button>
             </div>
-            <h1 id="profileFullName">Loading...</h1>
-            <p id="profileEmail">loading@example.com</p>
+            <h1 id="profileFullName">Loading Name...</h1>
+            <p id="profileEmail">loading.email@example.com</p>
 
             <nav class="user-actions-menu" aria-label="Account Menu">
               <button class="menu-btn active" id="myAccountBtn" aria-current="page">
@@ -50,6 +52,9 @@
               <button class="menu-btn" id="viewCheckoutBtn">
                 <i class="fas fa-box" aria-hidden="true"></i> Checkout
               </button>
+              <button class="menu-btn" id="viewOrdersBtn">
+                <i class="fas fa-history" aria-hidden="true"></i> Order History
+              </button>
               <button class="menu-btn logout-action" id="profileLogoutBtn">
                 <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout
               </button>
@@ -58,22 +63,65 @@
         </aside>
 
         <div class="profile-content-wrapper" style="flex: 2;">
-          <section id="wishlistSection" class="profile-main-content" aria-labelledby="wishlist-title">
+          <!-- 1. My Account Details Tab -->
+          <section id="accountSection" class="profile-main-content" aria-labelledby="account-title">
+            <h2 id="account-title" class="content-title">Account Details</h2>
+            <div class="checkout-form-box" style="max-width: 600px;">
+              <form id="profileForm">
+                <div class="name-row">
+                  <div class="form-group">
+                    <label for="profileFirstName">First Name</label>
+                    <input type="text" id="profileFirstName" class="form-control" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="profileLastName">Last Name</label>
+                    <input type="text" id="profileLastName" class="form-control" required />
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                  <label for="profileUserEmail">Email Address (Cannot change)</label>
+                  <input type="email" id="profileUserEmail" class="form-control" disabled />
+                </div>
+                <button type="submit" class="place-order-btn" style="max-width: 250px;">Save Changes</button>
+              </form>
+            </div>
+          </section>
+
+          <!-- 2. Wishlist Tab -->
+          <section id="wishlistSection" class="profile-main-content hidden" aria-labelledby="wishlist-title" aria-hidden="true">
             <h2 id="wishlist-title" class="content-title">My Wishlist & Saved Books</h2>
             <div class="wishlist-grid" id="wishlistContainer" aria-live="polite"></div>
           </section>
 
+          <!-- 3. Checkout Tab -->
           <section id="checkoutSection" class="profile-main-content hidden" aria-labelledby="checkout-title" aria-hidden="true">
             <h2 id="checkout-title" class="content-title">Secure Checkout</h2>
             <div class="checkout-grid" id="checkoutContainer" aria-live="polite"></div>
+          </section>
+
+          <!-- 4. Order History Tab -->
+          <section id="ordersSection" class="profile-main-content hidden" aria-labelledby="orders-title" aria-hidden="true">
+            <h2 id="orders-title" class="content-title">Your Order History</h2>
+            <div class="order-history-list" id="ordersContainer" aria-live="polite"></div>
           </section>
         </div>
       </div>
     </main>
 
-    <script src="./utils/header.js"></script>
-    <script src="../js/cart.js"></script>
+    <!-- Supabase SDK & Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    
+    <!-- Global Helper Scripts -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/toast.js"></script>
+
+    <!-- Injection Modules -->
+    <script src="./utils/header.js" type="module"></script>
+    <script src="../js/services/cart-manager.js" type="module"></script>
     <script src="./utils/footer.js"></script>
-    <script src="../js/profile.js"></script>
+    
+    <!-- Profile Page Controller Module -->
+    <script src="../js/controllers/profile.js" type="module"></script>
   </body>
 </html>

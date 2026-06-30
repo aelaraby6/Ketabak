@@ -1,11 +1,15 @@
+// footer.js
+// Footer injection script using global variables and responsive styles
+
 document.addEventListener("DOMContentLoaded", () => {
   const isPagesFolder = window.location.pathname.includes("/pages/");
+  const rootPath = isPagesFolder ? "../" : "";
   const pagesPath = isPagesFolder ? "" : "pages/";
 
   const footerHTML = `
     <footer class="footer" role="contentinfo">
       <div class="footer-container">
-        <div class="footer-section">
+        <div class="footer-section brand-section">
           <h3 class="footer-logo">ketabak</h3>
           <p class="footer-description">
             Your gateway to a world of knowledge and imagination. Discover, read, and transform your life one book at a time.
@@ -38,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </ul>
         </nav>
 
-        <div class="footer-section">
+        <div class="footer-section contact-section">
           <h4>Contact Info</h4>
           <address class="contact-info" style="font-style: normal;">
             <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Cairo, Egypt</p>

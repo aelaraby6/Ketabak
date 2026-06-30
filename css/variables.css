@@ -1,0 +1,106 @@
+/* variables.css */
+/* Core Design Tokens & Theme Variables */
+
+:root {
+  /* Font Families */
+  --font-primary: "Open Sans", sans-serif;
+  --font-logo: "Cairo", sans-serif;
+
+  /* Spacing Scale (4px base) */
+  --space-xxs: 0.25rem; /* 4px */
+  --space-xs: 0.5rem;  /* 8px */
+  --space-sm: 0.75rem; /* 12px */
+  --space-md: 1rem;    /* 16px */
+  --space-lg: 1.5rem;  /* 24px */
+  --space-xl: 2rem;    /* 32px */
+  --space-xxl: 3rem;   /* 48px */
+
+  /* Border Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Shared Semantic Colors (Status) */
+  --color-success: HSL(145, 63%, 42%);
+  --color-success-bg: HSL(145, 63%, 95%);
+  --color-error: HSL(354, 70%, 54%);
+  --color-error-bg: HSL(354, 70%, 96%);
+  --color-warning: HSL(45, 100%, 48%);
+  --color-warning-bg: HSL(45, 100%, 96%);
+  --color-info: HSL(210, 85%, 52%);
+  --color-info-bg: HSL(210, 85%, 96%);
+}
+
+/* Light Theme Variables */
+:root, [data-theme="light"] {
+  --bg-primary: HSL(220, 20%, 97%);
+  --bg-secondary: HSL(0, 0%, 100%);
+  --bg-tertiary: HSL(220, 15%, 93%);
+  --bg-card: HSL(0, 0%, 100%);
+  
+  --text-primary: HSL(220, 40%, 12%);
+  --text-secondary: HSL(220, 15%, 45%);
+  --text-muted: HSL(220, 10%, 65%);
+  --text-light: HSL(0, 0%, 100%);
+
+  --color-primary: HSL(28, 90%, 52%); /* Premium Orange Gold */
+  --color-primary-hover: HSL(28, 95%, 45%);
+  --color-primary-light: HSL(28, 90%, 94%);
+  
+  --color-accent: HSL(255, 60%, 55%); /* Royal Violet */
+  --color-accent-hover: HSL(255, 65%, 48%);
+  
+  --border-color: HSL(220, 15%, 88%);
+  --border-focus: var(--color-primary);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 18px -2px rgba(10, 20, 40, 0.06), 0 2px 6px -1px rgba(10, 20, 40, 0.04);
+  --shadow-lg: 0 12px 30px -4px rgba(10, 20, 40, 0.1), 0 4px 12px -2px rgba(10, 20, 40, 0.06);
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-blur: 16px;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --bg-primary: HSL(220, 30%, 5%);
+  --bg-secondary: HSL(220, 25%, 8%);
+  --bg-tertiary: HSL(220, 20%, 12%);
+  --bg-card: HSL(220, 25%, 10%);
+  
+  --text-primary: HSL(220, 20%, 93%);
+  --text-secondary: HSL(220, 15%, 68%);
+  --text-muted: HSL(220, 10%, 48%);
+  --text-light: HSL(0, 0%, 100%);
+
+  --color-primary: HSL(28, 90%, 56%);
+  --color-primary-hover: HSL(28, 95%, 48%);
+  --color-primary-light: HSL(28, 90%, 16%);
+  
+  --color-accent: HSL(255, 60%, 65%);
+  --color-accent-hover: HSL(255, 65%, 58%);
+  
+  --border-color: HSL(220, 20%, 16%);
+  --border-focus: var(--color-primary);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 8px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.7), 0 6px 16px -2px rgba(0, 0, 0, 0.5);
+
+  --glass-bg: rgba(15, 20, 35, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-blur: 16px;
+
+  /* Semantic updates for Dark Mode */
+  --color-success-bg: HSL(145, 63%, 8%);
+  --color-error-bg: HSL(354, 70%, 9%);
+  --color-warning-bg: HSL(45, 100%, 7%);
+  --color-info-bg: HSL(210, 85%, 8%);
+}
