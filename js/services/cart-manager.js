@@ -40,3 +40,6 @@ window.addBookToCart = async function (bookId) {
     window.showNotification("Failed to add item to cart", "error");
   }
 };
+
+// Expose alias for compatibility
+window.addToCart = window.addBookToCart;

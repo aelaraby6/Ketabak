@@ -79,7 +79,7 @@ function createBookCard(book, isInWishlist) {
         </div>
         
         <div class="card-actions">
-          <button class="add-to-cart-btn" onclick="addToCart(${book.id})" ${isOutOfStock ? "disabled" : ""} aria-label="Add ${book.title} to cart">
+          <button class="add-to-cart-btn" onclick="addBookToCart(${book.id})" ${isOutOfStock ? "disabled" : ""} aria-label="Add ${book.title} to cart">
             <i class="fas fa-shopping-cart" aria-hidden="true"></i> Add to Cart
           </button>
           <button class="wishlist-btn" onclick="toggleWishlist(${book.id})" aria-label="Toggle wishlist for ${book.title}">
