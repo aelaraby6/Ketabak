@@ -1,7 +1,13 @@
-﻿.container {
+/* about.css */
+/* Styles for About Us page */
+
+@import url("./variables.css");
+@import url("./components.css");
+
+.container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 0 24px;
 }
 
 .about-hero {
@@ -10,23 +16,21 @@
 }
 
 .about-content-section {
-  background-color: #fff;
+  background-color: var(--bg-primary);
   padding: 80px 0;  
-  margin-top: -50px;
   position: relative;
   z-index: 2;
-  border-radius: 30px 30px 0 0;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
+  transition: background-color var(--transition-normal);
 }
 
 .story-grid {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 60px;
 }
 
 .story-text {
-  flex: 1;
+  flex: 1.2;
 }
 
 .story-image {
@@ -35,109 +39,145 @@
 
 .story-image img {
   width: 100%;
-  border-radius: 20px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  transition: transform var(--transition-normal);
 }
 
 .story-image img:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .section-title {
-  font-size: 2.5rem;
-  color: var(--second-color);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
   margin-bottom: 20px;
   position: relative;
   display: inline-block;
+  padding-bottom: 12px;
 }
 
 .section-title::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -10px;
+  bottom: 0;
   width: 60px;
-  height: 4px;
-  background-color: var(--main-color);
-  border-radius: 2px;
+  height: 3px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
 }
 
 .story-text p {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #555;
+  color: var(--text-secondary);
   margin-bottom: 20px;
 }
 
 .stats-box {
   display: flex;
   gap: 40px;
-  margin-top: 30px;
+  margin-top: 40px;
   padding-top: 30px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
 }
 
 .stat-item h3 {
-  font-size: 2rem;
-  color: var(--main-color);
+  font-size: 2.2rem;
+  color: var(--color-primary);
   font-weight: 800;
+  line-height: 1.2;
 }
 
 .stat-item span {
-  color: #777;
-  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .values-section {
-  background-color: var(--second-color);
+  background-color: var(--bg-secondary);
   padding: 80px 0;
-  color: #fff;
-  margin-bottom: 60px;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color var(--transition-normal);
 }
 
 .values-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
   margin-top: 40px;
 }
 
 .value-card {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 30px;
-  border-radius: 15px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 40px 30px;
+  border-radius: var(--radius-lg);
   text-align: center;
-  transition: transform 0.3s ease, background 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .value-card:hover {
-  transform: translateY(-10px);
-  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(238, 142, 58, 0.2);
 }
 
 .value-card i {
   font-size: 2.5rem;
-  color: var(--main-color);
+  color: var(--color-primary);
   margin-bottom: 20px;
 }
 
 .value-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .value-card p {
-  color: #ddd;
+  color: var(--text-secondary);
   line-height: 1.6;
+  font-size: 14px;
 }
 
 .team-container {
   max-width: 1400px;
-  margin: 0 auto 80px;
-  padding: 0 20px;
+  margin: 80px auto;
+  padding: 0 24px;
+}
+
+.team-container .title {
+  font-size: 2.2rem;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 50px;
+  font-weight: 800;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-bottom: 12px;
+}
+
+.team-container .title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
 }
 
 .team-grid {
@@ -145,134 +185,122 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  margin-top: 40px;
 }
 
 .team-card {
-  transition: all 0.4s ease !important;
-  width: 280px;
-  background: linear-gradient(135deg, #1a2332 0%, #2d3e52 100%);
-  border-radius: 20px;
-  overflow: hidden;
+  width: 270px;
+  flex-shrink: 0;
 }
 
 .team-card .book-image-container {
-  height: 350px;
+  height: 300px;
   overflow: hidden;
+  background-color: var(--bg-tertiary);
 }
 
 .team-card .book-image {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform var(--transition-slow);
 }
 
 .team-card:hover .book-image {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .team-card .book-info {
-  padding: 25px 20px;
-  background: linear-gradient(135deg, #1a2332 0%, #2d3e52 100%);
+  padding: 24px;
+  background-color: var(--bg-card);
+  border-top: none;
 }
 
 .team-card .category-tag {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
   display: inline-block;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .team-card .book-title {
-  color: #fff;
-  font-size: 1.3rem;
-  margin: 10px 0 8px;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin: 6px 0;
   font-weight: 700;
+  height: auto;
 }
 
 .team-card .book-author {
-  color: #a0aec0;
-  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-size: 14px;
   margin-bottom: 0;
-}
-
-.team-card:hover {
-  transform: translateY(-15px) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .team-socials {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
 }
 
 .team-socials a {
-  color: #a0aec0;
-  font-size: 20px;
-  transition: all 0.3s ease;
-  width: 40px;
-  height: 40px;
+  color: var(--text-secondary);
+  font-size: 18px;
+  transition: all var(--transition-fast);
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
 }
 
 .team-socials a:hover {
-  color: var(--main-color);
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 992px) {
   .story-grid {
     flex-direction: column;
+    gap: 45px;
   }
-
-  .story-image img {
-    height: 300px;
-    object-fit: cover;
-  }
-
-  .team-grid {
-    gap: 25px;
-  }
-
-  .team-card {
-    width: 260px;
+  .story-image {
+    width: 100%;
+    max-width: 500px;
   }
 }
 
-@media (max-width: 576px) {
-  .about-hero {
-    min-height: 40vh;
+@media (max-width: 768px) {
+  .about-content-section {
+    padding: 60px 0;
   }
-
-  .intro-text h1 {
-    font-size: 2.5rem;
+  .values-section {
+    padding: 60px 0;
   }
-
-  .stats-box {
-    gap: 20px;
-    justify-content: space-between;
+  .team-container {
+    margin: 60px auto;
   }
-
+  .team-container .title {
+    font-size: 1.8rem;
+  }
   .team-grid {
-    flex-direction: column;
-    align-items: center;
+    gap: 20px;
   }
-
   .team-card {
-    width: 100%;
-    max-width: 320px;
+    width: 240px;
+  }
+  .team-card .book-image-container {
+    height: 260px;
   }
 }

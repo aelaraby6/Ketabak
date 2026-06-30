@@ -1,43 +1,116 @@
+// header.js
+// Header injection script using Supabase Auth and modular ES6 pattern
+
+import { supabase } from "../../js/supabase-config.js";
+
 const isPagesFolder = window.location.pathname.includes("/pages/");
 const rootPath = isPagesFolder ? "../" : "";
 const pagesPath = isPagesFolder ? "" : "pages/";
 
-const currentUserJson = localStorage.getItem("currentUser");
-const currentUser = currentUserJson ? JSON.parse(currentUserJson) : null;
-
-const cart = JSON.parse(localStorage.getItem("ketabak_cart")) || [];
-const cartTotalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-let userActionsHTML = "";
-
-if (currentUser) {
-  userActionsHTML = `
-    <div class="cart-icon" onclick="window.location.href='${pagesPath}cart.html'" style="cursor:pointer;" tabindex="0" aria-label="Shopping Cart">
-      <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-      <span class="cart-count">${cartTotalItems}</span>
-    </div>
-    <div class="user-menu" style="display:flex;align-items:center;gap:10px;">
-      <button class="profile-btn" onclick="window.location.href='${pagesPath}profile.html'" style="padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;display:flex;align-items:center;gap:6px;">
-        <i class="fas fa-user-circle"></i>
-        <span>${currentUser.firstName}</span>
-      </button>
-      <button class="logout-btn" onclick="handleLogout()" style="padding:8px 16px;border:1px solid #dee2e6;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;background:#f8f9fa;color:#495057;display:flex;align-items:center;gap:6px;">
-        <i class="fas fa-sign-out-alt"></i>
-        Logout
-      </button>
-    </div>
-  `;
-} else {
-  userActionsHTML = `
-    <div class="cart-icon" onclick="window.location.href='${pagesPath}cart.html'" style="cursor:pointer;" tabindex="0" aria-label="Shopping Cart">
-      <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-      <span class="cart-count">${cartTotalItems}</span>
-    </div>
-    <a href="${pagesPath}signup.html" class="signup-btn">Sign Up</a>
-    <a href="${pagesPath}login.html" class="login-btn">Login</a>
-  `;
+// Calculate cart item count
+function updateHeaderCartCount() {
+  const cart = JSON.parse(localStorage.getItem("ketabak_cart")) || [];
+  const cartTotalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCountEl = document.querySelector(".cart-count");
+  if (cartCountEl) {
+    cartCountEl.textContent = cartTotalItems;
+  }
 }
 
+// Generate Auth Area HTML based on User Session
+function renderAuthArea(user) {
+  const authArea = document.getElementById("auth-area");
+  const mobileAuthArea = document.getElementById("mobile-auth-links");
+  
+  if (!authArea) return;
+
+  if (user) {
+    const firstName = user.user_metadata?.first_name || user.email.split("@")[0];
+    
+    // Desktop layout
+    authArea.innerHTML = `
+      <div class="user-menu">
+        <button class="profile-btn" onclick="window.location.href='${pagesPath}profile.html'">
+          <i class="fas fa-user-circle"></i>
+          <span>${firstName}</span>
+        </button>
+        <button class="logout-btn" id="headerLogoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    `;
+
+    // Mobile layout
+    if (mobileAuthArea) {
+      mobileAuthArea.innerHTML = `
+        <button onclick="window.location.href='${pagesPath}profile.html'" class="mobile-profile-btn">
+          <i class="fas fa-user-circle"></i> ${firstName}
+        </button>
+        <button id="mobileLogoutBtn" class="mobile-logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      `;
+    }
+  } else {
+    // Desktop layout
+    authArea.innerHTML = `
+      <a href="${pagesPath}signup.html" class="signup-btn">Sign Up</a>
+      <a href="${pagesPath}login.html" class="login-btn">Login</a>
+    `;
+
+    // Mobile layout
+    if (mobileAuthArea) {
+      mobileAuthArea.innerHTML = `
+        <a href="${pagesPath}signup.html" class="signup-btn">Sign Up</a>
+        <a href="${pagesPath}login.html" class="login-btn">Login</a>
+      `;
+    }
+  }
+
+  // Bind logout events
+  const logoutBtn = document.getElementById("headerLogoutBtn");
+  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+  
+  const handleLogoutClick = async () => {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        localStorage.removeItem("ketabak_cart");
+        localStorage.removeItem("ketabak_wishlist");
+        window.showNotification("Logged out successfully", "success");
+        setTimeout(() => {
+          window.location.href = `${rootPath}index.html`;
+        }, 800);
+      } catch (err) {
+        window.showNotification(err.message, "error");
+      }
+    }
+  };
+
+  if (logoutBtn) logoutBtn.addEventListener("click", handleLogoutClick);
+  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", handleLogoutClick);
+}
+
+// Check session and update header state
+async function initHeaderAuth() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    renderAuthArea(session ? session.user : null);
+    
+    // Subscribe to auth state changes to update header dynamically
+    supabase.auth.onAuthStateChange((event, session) => {
+      renderAuthArea(session ? session.user : null);
+    });
+  } catch (error) {
+    console.error("Error getting session for header:", error);
+    renderAuthArea(null);
+  }
+}
+
+// HTML Structure of the Header
 const headerHTML = `
   <header class="header" role="banner">
     <div class="header-container">
@@ -53,8 +126,20 @@ const headerHTML = `
         </ul>
       </nav>
 
-      <div class="header-actions" aria-label="User Actions" id="header-actions">
-        ${userActionsHTML}
+      <div class="header-actions" aria-label="User Actions">
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Theme">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </button>
+
+        <div class="cart-icon" onclick="window.location.href='${pagesPath}cart.html'" style="cursor:pointer;" tabindex="0" aria-label="Shopping Cart">
+          <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+          <span class="cart-count">0</span>
+        </div>
+
+        <div id="auth-area" class="auth-area">
+          <div class="header-skeleton" style="width: 140px; height: 36px; border-radius: var(--radius-full);"></div>
+        </div>
+
         <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle Menu" aria-expanded="false">
           <span></span>
           <span></span>
@@ -65,134 +150,64 @@ const headerHTML = `
   </header>
 `;
 
+// Insert header markup
 document.body.insertAdjacentHTML("afterbegin", headerHTML);
 
-const style = document.createElement("style");
-style.textContent = `
-  .hamburger-btn {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    z-index: 1100;
-  }
-  .hamburger-btn span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: #fff;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-  }
-  .hamburger-btn.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-  .hamburger-btn.open span:nth-child(2) { opacity: 0; }
-  .hamburger-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-  @media (max-width: 768px) {
-    .hamburger-btn { display: flex; }
-
-    #header-actions .signup-btn,
-    #header-actions .login-btn,
-    #header-actions .user-menu { display: none !important; }
-
-    #nav-links {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #1f2b47;
-      padding: 16px;
-      gap: 4px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      z-index: 999;
+// Theme toggle binding
+const toggleBtn = document.getElementById("theme-toggle-btn");
+if (toggleBtn) {
+  toggleBtn.addEventListener("click", () => {
+    if (window.ThemeSystem) {
+      window.ThemeSystem.toggle();
     }
-    #nav-links.open { display: flex; }
-
-    #nav-links li { width: 100%; }
-    #nav-links a {
-      display: block;
-      padding: 10px 14px;
-      border-radius: 6px;
-    }
-
-    #mobile-auth-links {
-      display: flex !important;
-      gap: 10px;
-      padding: 12px 14px 4px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      margin-top: 8px;
-    }
-    #mobile-auth-links a,
-    #mobile-auth-links button {
-      flex: 1;
-      text-align: center;
-      padding: 9px 12px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-  }
-`;
-document.head.appendChild(style);
-
-// Mobile auth buttons
-const mobileAuthEl = document.getElementById("mobile-auth-links");
-if (mobileAuthEl) {
-  if (currentUser) {
-    mobileAuthEl.innerHTML = `
-      <button onclick="window.location.href='${pagesPath}profile.html'" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <i class="fas fa-user-circle"></i> ${currentUser.firstName}
-      </button>
-      <button onclick="handleLogout()" style="background:#f8f9fa;color:#495057;border:1px solid #dee2e6;">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
-    `;
-  } else {
-    mobileAuthEl.innerHTML = `
-      <a href="${pagesPath}signup.html" class="signup-btn" style="display:flex;align-items:center;justify-content:center;">Sign Up</a>
-      <a href="${pagesPath}login.html" class="login-btn" style="display:flex;align-items:center;justify-content:center;">Login</a>
-    `;
-  }
+  });
 }
 
-// Hamburger toggle
+// Mobile Hamburger Toggle
 const hamburgerBtn = document.getElementById("hamburger-btn");
 const navLinks = document.getElementById("nav-links");
 
-hamburgerBtn.addEventListener("click", () => {
-  const isOpen = navLinks.classList.toggle("open");
-  hamburgerBtn.classList.toggle("open", isOpen);
-  hamburgerBtn.setAttribute("aria-expanded", isOpen);
-});
-
-// Close menu on link click
-navLinks.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("open");
-    hamburgerBtn.classList.remove("open");
-    hamburgerBtn.setAttribute("aria-expanded", false);
+if (hamburgerBtn && navLinks) {
+  hamburgerBtn.addEventListener("click", () => {
+    const isOpen = navLinks.classList.toggle("open");
+    hamburgerBtn.classList.toggle("open", isOpen);
+    hamburgerBtn.setAttribute("aria-expanded", isOpen);
   });
-});
 
-// Close menu on outside click
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".header")) {
-    navLinks.classList.remove("open");
-    hamburgerBtn.classList.remove("open");
-    hamburgerBtn.setAttribute("aria-expanded", false);
+  // Close menu on link click
+  navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      hamburgerBtn.classList.remove("open");
+      hamburgerBtn.setAttribute("aria-expanded", false);
+    });
+  });
+
+  // Close menu on outside click
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".header")) {
+      navLinks.classList.remove("open");
+      hamburgerBtn.classList.remove("open");
+      hamburgerBtn.setAttribute("aria-expanded", false);
+    }
+  });
+}
+
+// Initialize header count and auth check
+document.addEventListener("DOMContentLoaded", () => {
+  updateHeaderCartCount();
+  initHeaderAuth();
+  if (window.ThemeSystem) {
+    window.ThemeSystem.updateToggleButton();
   }
 });
 
-window.handleLogout = function () {
-  if (confirm("Are you sure you want to logout?")) {
-    localStorage.removeItem("currentUser");
-    window.location.href = isPagesFolder ? "../index.html" : "index.html";
+// Watch for storage events to update cart badge across tabs
+window.addEventListener("storage", (e) => {
+  if (e.key === "ketabak_cart") {
+    updateHeaderCartCount();
   }
-};
+});
+
+// Export helper to force-update cart count from other scripts
+window.updateHeaderCartCount = updateHeaderCartCount;

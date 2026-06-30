@@ -163,8 +163,17 @@
       </div>
     </main>
 
-    <script src="./utils/header.js"></script>
-    <script src="../js/cart.js"></script>
+    <!-- Supabase SDK & Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../env.js"></script>
+    
+    <!-- Global Helper Scripts -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/toast.js"></script>
+
+    <!-- Injection Modules -->
+    <script src="./utils/header.js" type="module"></script>
+    <script src="../js/services/cart-manager.js" type="module"></script>
     <script src="./utils/footer.js"></script>
   </body>
 </html>

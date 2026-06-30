@@ -1,37 +1,46 @@
-const signupForm = document.querySelector("form");
+// signup.js
+// SignUp Controller using Supabase Auth Service
 
-signupForm.addEventListener("submit", function (e) {
+import { AuthService } from "./services/auth.js";
+
+const signupForm = document.getElementById("signupForm");
+
+signupForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const firstName = document.getElementById("firstname").value;
-  const lastName = document.getElementById("lastname").value;
-  const email = document.getElementById("email").value;
+  const firstName = document.getElementById("firstname").value.trim();
+  const lastName = document.getElementById("lastname").value.trim();
+  const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const terms = document.getElementById("terms").checked;
 
   if (!terms) {
-    alert("Please agree to the Terms and Conditions");
+    window.showNotification("Please agree to the Terms and Conditions", "warning");
     return;
   }
 
-  const users = JSON.parse(localStorage.getItem("users")) || [];
+  // Disable button and show loading state
+  const submitBtn = signupForm.querySelector("button[type='submit']");
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Creating Account...";
 
-  const isUserExist = users.find((user) => user.email === email);
-  if (isUserExist) {
-    alert("This email is already registered!");
-    return;
+  try {
+    const data = await AuthService.signUp(email, password, firstName, lastName);
+    
+    window.showNotification("Registration Successful! Please sign in.", "success");
+    
+    // Redirect after brief delay to allow toast to show
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+
+  } catch (error) {
+    console.error("SignUp error:", error);
+    window.showNotification(error.message || "An error occurred during sign up", "error");
+    
+    // Restore button state
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
   }
-
-  const newUser = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    password: password,
-  };
-
-  users.push(newUser);
-  localStorage.setItem("users", JSON.stringify(users));
-
-  alert("Registration Successful! Please Login.");
-  window.location.href = "login.html";
 });
