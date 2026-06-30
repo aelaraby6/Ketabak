@@ -346,9 +346,11 @@ function setupOfflineSimulator() {
 
   supabaseInstance = mockQueries;
 
+  const originalMockFrom = mockQueries.from;
+
   // Build custom resolvers for Cart
   supabaseInstance.from = (table) => {
-    const originalFrom = mockQueries.from(table);
+    const originalFrom = originalMockFrom(table);
     if (table === "cart_items") {
       originalFrom.select = (columns = "*") => {
         return {
