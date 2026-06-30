@@ -176,6 +176,51 @@ main {
   gap: var(--space-sm);
 }
 
+.auth-area .signup-btn {
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  background-color: transparent;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-area .signup-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--text-light);
+  transform: translateY(-1px);
+}
+
+.auth-area .login-btn {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  color: var(--text-light);
+  padding: 9.5px 22px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-area .login-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+  box-shadow: 0 4px 10px rgba(238, 142, 58, 0.3);
+}
+
 .user-menu {
   display: flex;
   align-items: center;
@@ -253,13 +298,14 @@ main {
 .landing-page {
   min-height: calc(100vh - 80px);
   background: linear-gradient(rgba(10, 14, 30, 0.4), rgba(10, 14, 30, 0.5)),
-    url("https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920") center/cover no-repeat;
+    url("../images/landing-1.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   overflow: hidden;
+  transition: background-image 1.2s ease-in-out;
 }
 
 .landing-page .overlay {

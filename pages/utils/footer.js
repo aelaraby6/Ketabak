@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <nav class="footer-section" aria-label="Quick Links">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="${rootPath}${pagesPath}books.html">All Books</a></li>
-            <li><a href="${rootPath}${pagesPath}categories.html">Categories</a></li>
-            <li><a href="${rootPath}${pagesPath}authors.html">Authors</a></li>
-            <li><a href="${rootPath}${pagesPath}about.html">About Us</a></li>
+            <li><a href="${pagesPath}books.html">All Books</a></li>
+            <li><a href="${pagesPath}categories.html">Categories</a></li>
+            <li><a href="${pagesPath}authors.html">Authors</a></li>
+            <li><a href="${pagesPath}about.html">About Us</a></li>
           </ul>
         </nav>
 

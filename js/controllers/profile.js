@@ -486,4 +486,8 @@ async function initProfile() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", initProfile);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initProfile);
+} else {
+  initProfile();
+}

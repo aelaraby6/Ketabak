@@ -256,7 +256,9 @@ export const DbService = {
       order_id: order.id,
       book_id: item.id,
       quantity: item.quantity,
-      price: parseFloat(item.book.price.replace("$", ""))
+      price: typeof item.book.price === "string"
+        ? parseFloat(item.book.price.replace("$", ""))
+        : (typeof item.book.price === "number" ? item.book.price : 0)
     }));
 
     // 3. Insert order items

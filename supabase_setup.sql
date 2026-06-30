@@ -1,6 +1,3 @@
--- supabase_setup.sql
--- Run this script in the Supabase SQL Editor to set up the database tables,
--- triggers, Row Level Security (RLS) policies, and seed data.
 
 -- 1. Create Profiles Table (Linked to Supabase Auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (

@@ -198,4 +198,8 @@ async function initCart() {
   renderCart();
 }
 
-document.addEventListener("DOMContentLoaded", initCart);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCart);
+} else {
+  initCart();
+}

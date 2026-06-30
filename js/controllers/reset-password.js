@@ -56,4 +56,8 @@ resetPasswordForm.addEventListener("submit", async function (e) {
 });
 
 // Run access check on load
-document.addEventListener("DOMContentLoaded", checkAccess);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", checkAccess);
+} else {
+  checkAccess();
+}

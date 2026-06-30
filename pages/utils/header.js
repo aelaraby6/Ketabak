@@ -165,28 +165,31 @@ if (toggleBtn) {
 
 // Mobile Hamburger Toggle
 const hamburgerBtn = document.getElementById("hamburger-btn");
+const mainNav = document.getElementById("main-nav");
 const navLinks = document.getElementById("nav-links");
 
-if (hamburgerBtn && navLinks) {
+if (hamburgerBtn && mainNav) {
   hamburgerBtn.addEventListener("click", () => {
-    const isOpen = navLinks.classList.toggle("open");
+    const isOpen = mainNav.classList.toggle("open");
     hamburgerBtn.classList.toggle("open", isOpen);
     hamburgerBtn.setAttribute("aria-expanded", isOpen);
   });
 
   // Close menu on link click
-  navLinks.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      navLinks.classList.remove("open");
-      hamburgerBtn.classList.remove("open");
-      hamburgerBtn.setAttribute("aria-expanded", false);
+  if (navLinks) {
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("open");
+        hamburgerBtn.classList.remove("open");
+        hamburgerBtn.setAttribute("aria-expanded", false);
+      });
     });
-  });
+  }
 
   // Close menu on outside click
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".header")) {
-      navLinks.classList.remove("open");
+      mainNav.classList.remove("open");
       hamburgerBtn.classList.remove("open");
       hamburgerBtn.setAttribute("aria-expanded", false);
     }
@@ -194,13 +197,19 @@ if (hamburgerBtn && navLinks) {
 }
 
 // Initialize header count and auth check
-document.addEventListener("DOMContentLoaded", () => {
+function initHeader() {
   updateHeaderCartCount();
   initHeaderAuth();
   if (window.ThemeSystem) {
     window.ThemeSystem.updateToggleButton();
   }
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initHeader);
+} else {
+  initHeader();
+}
 
 // Watch for storage events to update cart badge across tabs
 window.addEventListener("storage", (e) => {

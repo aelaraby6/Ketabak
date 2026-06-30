@@ -94,29 +94,24 @@ async function loadBestsellers() {
   try {
     // 1. Try to fetch from Supabase
     books = await DbService.getBooks({ limit: 12 });
-  } catch (supabaseError) {
-    console.warn("Supabase fetch failed, falling back to local JSON:", supabaseError);
-    
-    try {
-      // 2. Fall back to local books.json
-      const response = await fetch("./data/books.json");
-      const data = await response.json();
-      books = data.books.map((b, index) => ({
-        ...b,
-        id: index + 1,
-        category: b.title.toLowerCase().includes("python") ? "Python" : "Programming"
-      })).slice(0, 12);
-    } catch (jsonError) {
-      console.error("Local JSON fetch failed:", jsonError);
-      carousel.innerHTML = `
-        <div class="error-message">
-          <i class="fas fa-exclamation-triangle"></i>
-          <h3>Failed to load bestsellers</h3>
-          <p>Please refresh the page or try again later.</p>
-        </div>
-      `;
-      return;
+    if (!books || books.length === 0) {
+      throw new Error("Supabase catalog is empty");
     }
+  } catch (supabaseError) {
+    console.error("Supabase fetch failed:", supabaseError);
+    carousel.innerHTML = `
+      <div class="error-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Failed to load bestsellers</h3>
+        <p>Please refresh the page or try again later.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Cache reference books list for the offline simulator
+  if (books && books.length > 0) {
+    localStorage.setItem("ketabak_offline_books_ref", JSON.stringify(books));
   }
 
   // Filter for top rated books as bestsellers
@@ -133,8 +128,34 @@ async function loadBestsellers() {
   carousel.innerHTML = bestsellers.map(book => createCarouselCard(book)).join("");
 }
 
+// Rotate background images of hero section
+function initHeroBackgroundSlider() {
+  const landing = document.querySelector(".landing-page");
+  if (!landing) return;
+
+  const images = [
+    "images/landing-1.jpg",
+    "images/landing-2.jpg",
+    "images/landing-3.jpg",
+    "images/landing-4.jpg"
+  ];
+  let currentIndex = 0;
+
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % images.length;
+    landing.style.backgroundImage = `linear-gradient(rgba(10, 14, 30, 0.45), rgba(10, 14, 30, 0.55)), url("${images[currentIndex]}")`;
+  }, 5000);
+}
+
 // Initialize on page load
-document.addEventListener("DOMContentLoaded", () => {
+function initHome() {
   initCarouselScroll();
   loadBestsellers();
-});
+  initHeroBackgroundSlider();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initHome);
+} else {
+  initHome();
+}

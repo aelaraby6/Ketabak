@@ -1,6 +1,3 @@
-// book-details.js
-// Book Details Page Controller
-
 import { supabase } from "../supabase-config.js";
 import { DbService } from "../services/db.js";
 
@@ -222,25 +219,14 @@ async function initDetails() {
     const book = allBooks.find(b => b.id === bookId);
     displayBookDetails(book);
   } catch (dbError) {
-    console.warn("Supabase fetch details failed, attempting fallback:", dbError);
-    
-    try {
-      // 2. Offline fallback
-      const response = await fetch("../data/books.json");
-      const data = await response.json();
-      allBooks = data.books.map((b, index) => ({
-        ...b,
-        id: index + 1,
-        category: b.title.toLowerCase().includes("python") ? "Python" : "Programming"
-      }));
-      const book = allBooks.find(b => b.id === bookId);
-      displayBookDetails(book);
-    } catch (fallbackError) {
-      console.error("Details page fallback failed:", fallbackError);
-      window.showNotification("Could not load book details.", "error");
-    }
+    console.error("Supabase fetch details failed:", dbError);
+    window.showNotification("Could not load book details.", "error");
   }
 }
 
 // Initialize on page load
-document.addEventListener("DOMContentLoaded", initDetails);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initDetails);
+} else {
+  initDetails();
+}

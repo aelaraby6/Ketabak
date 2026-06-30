@@ -1,10 +1,8 @@
-// books.js
-// Books Catalog Page Controller
-
 import { supabase } from "../supabase-config.js";
 import { DbService } from "../services/db.js";
 
 let booksData = [];
+let isOfflineMode = false;
 const allBooksContainer = document.querySelector(".all-books");
 
 // Render stars utility
@@ -164,13 +162,37 @@ window.toggleWishlist = async function (bookId) {
   }
 };
 
-// Filter execution (fetches dynamically from DB)
+// Filter execution (fetches dynamically from DB or locally)
 let filterTimeout;
 async function performFiltering() {
   const search = document.getElementById("searchInput").value.trim();
   const category = document.getElementById("categoryFilter").value;
   const priceRange = document.getElementById("priceFilter").value;
   const rating = document.getElementById("ratingFilter").value;
+
+  if (isOfflineMode) {
+    // Local offline filtering fallback
+    let filtered = booksData;
+    if (search) {
+      const q = search.toLowerCase();
+      filtered = filtered.filter(b => 
+        b.title.toLowerCase().includes(q) || 
+        b.authors.toLowerCase().includes(q)
+      );
+    }
+    if (category) {
+      filtered = filtered.filter(b => b.category === category);
+    }
+    if (rating) {
+      filtered = filtered.filter(b => b.rating >= parseFloat(rating));
+    }
+    if (priceRange) {
+      const [min, max] = priceRange.split("-").map(Number);
+      filtered = filtered.filter(b => b.price >= min && b.price <= (max || Infinity));
+    }
+    displayBooks(filtered);
+    return;
+  }
 
   try {
     const filtered = await DbService.getBooks({ search, category, priceRange, rating });
@@ -291,7 +313,11 @@ async function initCatalog() {
   try {
     // Fetch all books for initial render and category grouping
     booksData = await DbService.getBooks();
+    if (!booksData || booksData.length === 0) {
+      throw new Error("Supabase catalog is empty");
+    }
     populateCategories(booksData);
+    localStorage.setItem("ketabak_offline_books_ref", JSON.stringify(booksData));
     
     // Parse URL parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -304,43 +330,19 @@ async function initCatalog() {
     }
   } catch (error) {
     console.error("Initial load error:", error);
-    
-    // Fallback to local books.json
-    try {
-      const response = await fetch("../data/books.json");
-      const data = await response.json();
-      booksData = data.books.map((b, index) => ({
-        ...b,
-        id: index + 1,
-        category: b.title.toLowerCase().includes("python") ? "Python" : "Programming"
-      }));
-      populateCategories(booksData);
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const categoryParam = urlParams.get('category');
-      if (categoryParam) {
-        document.getElementById("categoryFilter").value = categoryParam;
-        filterBooksDataOffline(categoryParam);
-      } else {
-        displayBooks(booksData);
-      }
-      window.showNotification("Running in offline fallback mode", "warning");
-    } catch (fallbackError) {
-      allBooksContainer.innerHTML = `
-        <div class="error-message">
-          <i class="fas fa-exclamation-triangle"></i>
-          <h3>Failed to load catalog</h3>
-          <p>Please check your network and try again.</p>
-        </div>
-      `;
-    }
+    allBooksContainer.innerHTML = `
+      <div class="error-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>Failed to load catalog</h3>
+        <p>Please check your network and try again.</p>
+      </div>
+    `;
   }
 }
 
-// Simple offline filtering fallback
-function filterBooksDataOffline(category) {
-  const filtered = booksData.filter(b => b.category === category);
-  displayBooks(filtered);
-
 // Run initialisation
-document.addEventListener("DOMContentLoaded", initCatalog);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCatalog);
+} else {
+  initCatalog();
+}
