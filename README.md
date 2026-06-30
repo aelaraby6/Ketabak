@@ -1,6 +1,6 @@
 # Ketabak
 
-A simple Bookstore Website built using HTML, CSS, and JavaScript. It allows users to browse books, view details, and explore categories
+A modern, full-featured Bookstore Web Application built with HTML, CSS, and JavaScript, powered by **Supabase** for user authentication, database management, and real-time data persistence (shopping cart, wishlist, and profiles).
 
 <img width="1891" height="866" alt="image" src="https://github.com/user-attachments/assets/cb5f2613-3e60-45dc-ab0d-cc38e0cf850a" />
 <img width="1714" height="733" alt="image" src="https://github.com/user-attachments/assets/a392e9b1-7ca9-412d-8a9d-1911ffde7cd3" />
@@ -22,13 +22,15 @@ A simple Bookstore Website built using HTML, CSS, and JavaScript. It allows user
 - **Authors Details**: View detailed information about authors
 - **Responsive Design**: Fully responsive layout that works on all devices
 - **Book Navigation**: Navigate between books with prev/next buttons
-- **User Authentication**: Login and signup pages for user accounts
+- **User Authentication**: Secure signup and login powered by **Supabase Auth**
+- **Cart & Wishlist Persistence**: Real-time management and storage of user cart items and wishlists via **Supabase Database**
 
 ## 🛠️ Technologies Used
 
 - **HTML5**: Semantic markup and structure
 - **CSS3**: Modern styling with Flexbox and Grid
 - **JavaScript (ES6+)**: Dynamic functionality and interactivity
+- **Supabase**: Backend-as-a-Service for user auth, PostgreSQL database, and Row Level Security (RLS)
 
 ## 📊 Data Structure
 
@@ -53,13 +55,10 @@ Books are stored in `data/books.json` with the following structure:
 
 ## 🔮 Future Enhancements
 
-- Backend integration with database
-- User authentication with JWT
 - Payment gateway integration
 - Book reviews and ratings system
 - Order history and tracking
 - Advanced search with multiple filters
-- Shopping cart persistence
 
 ## 👥 Contributors
 
